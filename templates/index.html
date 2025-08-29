@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Beef Burger Co Menu</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        .nav-menu {
+            background-color: #ffffff;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            gap: 40px;
+        }
+
+        .nav-menu li {
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-menu li:hover {
+            color: #ffbc0d;
+        }
+
+        .menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .menu-item-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .menu-item {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: auto;
+            max-width: 280px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+
+        .menu-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .menu-item h3 {
+            margin: 15px 0;
+            color: #292929;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .price {
+            color: #292929;
+            font-size: 18px;
+            font-weight: 500;
+            margin: 10px 0;
+        }
+
+        .add-to-cart {
+            background-color: #ffbc0d;
+            color: #292929;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .add-to-cart:hover {
+            background-color: #ffa500;
+        }
+
+        .section-title {
+            color: #292929;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 40px 0 20px;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #ffbc0d;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header-logo {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .brand-title {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            color: #292929;
+        }
+
+        .active-section {
+            color: #ffbc0d;
+            position: relative;
+        }
+
+        .active-section::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #ffbc0d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container text-center">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Beef Burger Co Logo" class="header-logo">
+            <h1 class="brand-title">Beef Burger Co.</h1>
+        </div>
+    </div>
+
+    <nav class="nav-menu">
+        <ul>
+            <li>BURGERS</li>
+            <li>FRIES</li>
+            <li>DRINKS</li>
+            <li>SHAKES</li>
+        </ul>
+    </nav>
+
+    <div class="menu-section">
+        <h2 class="section-title">Burgers</h2>
+        <div class="menu-grid">
+            {% for burger, details in beef_burgers.items() %}
+            <a href="{{ url_for('item_details', category='burgers', item_name=burger) }}" class="menu-item-link">
+                <div class="menu-item">
+                    <img src="{{ url_for('static', filename=details.image) }}" alt="{{ burger }}">
+                    <h3>{{ burger }}</h3>
+                    <div class="price">${{ "%.2f"|format(details.price) }}</div>
+                    <button class="add-to-cart">View Details</button>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="menu-section">
+        <h2 class="section-title">Fries</h2>
+        <div class="menu-grid">
+            {% for fry, details in fries.items() %}
+            <div class="menu-item">
+                <img src="{{ url_for('static', filename=details.image) }}" alt="{{ fry }}">
+                <h3>{{ fry }}</h3>
+                <div class="price">${{ "%.2f"|format(details.price) }}</div>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="menu-section">
+        <h2 class="section-title">Drinks</h2>
+        <div class="menu-grid">
+            {% for drink, details in drinks.items() %}
+            <div class="menu-item">
+                <img src="{{ url_for('static', filename=details.image) }}" alt="{{ drink }}">
+                <h3>{{ drink }}</h3>
+                <div class="price">${{ "%.2f"|format(details.price) }}</div>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="menu-section">
+        <h2 class="section-title">Shakes</h2>
+        <div class="menu-grid">
+            {% for shake, details in shakes.items() %}
+            <div class="menu-item">
+                <img src="{{ url_for('static', filename=details.image) }}" alt="{{ shake }}">
+                <h3>{{ shake }}</h3>
+                <div class="price">${{ "%.2f"|format(details.price) }}</div>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+Add images, fix add to cart, add cart, fix navbar, add descriptions, add animations, payment handling
+</body>
+</html>
